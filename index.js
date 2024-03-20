@@ -24,4 +24,10 @@ app.get("/",(req,res)=>{
   
 })
 
+//Student Router
+const StudentRouter = require("./src/routes/student_router");
+app.use("/api", StudentRouter);
 
+//Course Router
+const CourseRouter = require("./src/routes/course_router");
+app.use("/api",CourseRouter);
