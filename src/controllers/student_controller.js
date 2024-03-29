@@ -84,7 +84,7 @@ const StudentController = {
                  res.json({
                    success : true,
                    message : "Student Data get",
-                   studentData : studentData
+                   data : studentData
                  })
                }
         })
