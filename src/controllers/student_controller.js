@@ -3,16 +3,33 @@ const bcrypt = require("bcrypt");
 const saltRounds = 6;
 const generateToken = require('../middleware/generateToken');
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+
+const profileConfig = multer.diskStorage({
+    destination : (req,file,callBack)=>{
+        callBack(null,"./uploads/profile")
+    },
+    filename : (req,file,callBack)=>{
+        callBack(null,`profile-${Date.now()}.${file.originalname}`)
+    }
+});
+
+
+const uploads = multer({
+    storage : profileConfig
+})
 
 const StudentController = {
     studentRegistration: (req, res) => {
-        const { name, email, profile, password } = req.body;
+        const { name, email, password } = req.body;
+        const profile = req.file ? req.file.path : null;
+    
         bcrypt.genSalt(saltRounds, (err, salt) => {
             if (err) {
                 console.error("Error generating salt", err);
                 return res.status(400).json({ success: false, message: "Error creating user" });
             }
-
+    
             bcrypt.hash(password, salt, (err, hash) => {
                 if (err) {
                     console.error("Error hashing password", err);
@@ -20,7 +37,7 @@ const StudentController = {
                 }
 
                 const query = "INSERT INTO student (name, email, profile, password) VALUES (?, ?, ?, ?)";
-                db.query(query, [name, email, profile, hash], (err, result) => {
+                db.query(query, [name, email, profile, password], (err, result) => {
                     if (err) {
                         console.error("student registration error: ", err);
                         return res.status(400).json({ success: false, message: err.message });
@@ -91,4 +108,4 @@ const StudentController = {
     }
 };
 
-module.exports = StudentController;
+module.exports = {StudentController,uploads};
