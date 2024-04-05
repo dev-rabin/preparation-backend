@@ -31,3 +31,13 @@ app.use("/api", StudentRouter);
 //Course Router
 const CourseRouter = require("./src/routes/course_router");
 app.use("/api",CourseRouter);
+
+
+//Course module Router
+const ModuleRouter = require("./src/routes/module_router");
+app.use("/api",ModuleRouter);
+
+
+//Module Lessons Router
+const LessonRouter = require("./src/routes/lesson_router");
+app.use("/api",LessonRouter);
