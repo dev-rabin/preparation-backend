@@ -29,7 +29,7 @@ const LessonController = {
         });
     },
     getLessonByModuleId : (req,res) =>{
-        const {module_id} = req.body;
+        const {module_id} = req.params;
         const query = "select * from lesson where module_id = ?";
         db.query(query,module_id,(err,result)=>{
             if (err) {

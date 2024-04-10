@@ -2,9 +2,9 @@ const db = require("../connection");
 
 const CourseController = {
     createCourse : (req, res) => {
-        const {name,description,price,is_progress_limited} = req.body;
-        const query = "insert into course (name,description,price,is_progress_limited) values (?,?,?,?)";
-        db.query(query,[name,description,price,is_progress_limited],(err,result)=>{
+        const {course_name,description,price,is_progress_limited} = req.body;
+        const query = "insert into course (course_name,description,price,is_progress_limited) values (?,?,?,?)";
+        db.query(query,[course_name,description,price,is_progress_limited],(err,result)=>{
             if (err) {
                 console.error("Error during creating course : ", err);
                 return res.status(400).json({success: false, message : err.message});
