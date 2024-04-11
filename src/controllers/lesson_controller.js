@@ -5,7 +5,7 @@ const lessonVideoConfig = multer.diskStorage({
     destination : (req,file,callBack) => {
         callBack(null,"./uploads/videos");
     },filename : (req,file,callBack)=>{
-        callBack(null,`video-${Date.now()}.${file.originalname}`);
+        callBack(null,file.originalname);
     }
 });
 

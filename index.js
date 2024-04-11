@@ -7,7 +7,9 @@ const cors = require("cors");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use('/api/uploads/videos', express.static('uploads'));
+
+app.use('/api/uploads/videos', express.static('uploads/videos'));
+
 app.listen(port,()=>{
 console.log(`server is connected to port ${port}`);
 })
