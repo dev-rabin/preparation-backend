@@ -44,3 +44,8 @@ app.use("/api",ModuleRouter);
 //Module Lessons Router
 const LessonRouter = require("./src/routes/lesson_router");
 app.use("/api",LessonRouter);
+
+
+//Quiz Router
+const QuizRouter = require("./src/routes/quiz_router");
+app.use("/api",QuizRouter);
