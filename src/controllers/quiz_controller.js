@@ -65,6 +65,20 @@ const QuizController = {
                 return res.status(200).json({success : true, message : "Fetched qustions successfully", data : result});
             }
         })
+    },
+    fetchOptionsByQuestionId : (req,res) =>{
+        const question_id = req.params.question_id;
+        console.log("question_id : ",question_id);
+        const query = "select * from question_options where question_id = ?";
+        db.query(query,question_id,(err,result)=>{
+            if (err) {
+                console.error("Error during fetchOptionsByQuestionId : ",err);
+                return res.status(400).json({success : false, message : err.message});
+            }else{
+                console.log("fetchOptionsByQuestionId successfully : ",result);
+                return res.status(200).json({success : true, message : "Fetched qustion options successfully", data : result});
+            }
+        })
     }
 }
 
