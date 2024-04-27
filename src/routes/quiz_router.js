@@ -6,7 +6,7 @@ QuizRouter.post("/createquiz", QuizController.createQuiz);
 QuizRouter.post("/quizquestions",QuizController.quizQuestions);
 QuizRouter.post("/questionoptions",QuizController.qustionOptions);
 QuizRouter.get("/quizzes",QuizController.fetchQuiz);
-QuizRouter.get("/quizzes/:quiz_id",QuizController.fetchQuizQuestionsbyQuizId);
-QuizRouter.get("/quizzes/questionoptions/:question_id",QuizController.fetchOptionsByQuestionId);
+// QuizRouter.get("/quizzes/:quiz_id",QuizController.fetchQuizQuestionsbyQuizId);
+QuizRouter.get("/quizzes/questionoptions/:quiz_id",QuizController.fetchQuestionsWithOptions);
 
 module.exports = QuizRouter;

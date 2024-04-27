@@ -53,32 +53,62 @@ const QuizController = {
             }
         })
     },
-    fetchQuizQuestionsbyQuizId : (req,res) =>{
-        const quiz_id = req.params;
-        const query = "select * from quiz_questions where quiz_id = ?"
-        db.query(query,quiz_id,(err,result)=>{
+    // fetchQuizQuestionsbyQuizId : (req,res) =>{
+    //     const quiz_id = req.params;
+    //     const query = "select * from quiz_questions where quiz_id = ?"
+    //     // const query = "SELECT * FROM `preparation-db`.quiz_questions join question_options on question_options.question_id = quiz_questions.question_id;"
+    //     db.query(query,quiz_id,(err,result)=>{
+    //         if (err) {
+    //             console.error("Error during fetchQuizQuestionsbyQuizId : ",err);
+    //             return res.status(400).json({success : false, message : err.message});
+    //         } else{
+    //             console.log("fetchQuizQuestionsbyQuizId successfully : ",result);
+    //             return res.status(200).json({success : true, message : "Fetched qustions successfully", data : result});
+    //         }
+    //     })
+    // },
+    // // fetchOptionsByQuestionId : (req,res) =>{
+    // //     const question_id = req.params.question_id;
+    // //     console.log("question_id : ",question_id);
+    // //     const query = "select * from question_options where question_id = ?";
+    // //     db.query(query,question_id,(err,result)=>{
+    // //         if (err) {
+    // //             console.error("Error during fetchOptionsByQuestionId : ",err);
+    // //             return res.status(400).json({success : false, message : err.message});
+    // //         }else{
+    // //             console.log("fetchOptionsByQuestionId successfully : ",result);
+    // //             return res.status(200).json({success : true, message : "Fetched qustion options successfully", data : result});
+    // //         }
+    // //     })
+    // // }
+    fetchQuestionsWithOptions: (req, res) => {
+        const quiz_id = req.params.quiz_id;
+        const query = `
+            SELECT quiz_questions.question_text, 
+                   question_options.option_id, question_options.option_text, question_options.is_correct_option
+            FROM quiz_questions
+            LEFT JOIN question_options ON quiz_questions.question_id = question_options.question_id
+            WHERE quiz_questions.quiz_id = ?
+        `;
+        db.query(query, [quiz_id], (err, result) => {
             if (err) {
-                console.error("Error during fetchQuizQuestionsbyQuizId : ",err);
-                return res.status(400).json({success : false, message : err.message});
-            } else{
-                console.log("fetchQuizQuestionsbyQuizId successfully : ",result);
-                return res.status(200).json({success : true, message : "Fetched qustions successfully", data : result});
+                console.error("Error during fetchQuestionsWithOptions: ", err);
+                return res.status(400).json({ success: false, message: err.message });
+            } else {
+                console.log("fetchQuestionsWithOptions successfully: ", result);
+                const questionsWithOptions = [];
+                let currentQuestion = null;
+                result.forEach(row => {
+                    const { question_text, option_id, option_text, is_correct_option } = row;
+                    if (!currentQuestion || currentQuestion.question_text !== question_text) {
+                        currentQuestion = { question_text, options: [] };
+                        questionsWithOptions.push(currentQuestion);
+                    }
+                    currentQuestion.options.push({ option_id, option_text, is_correct_option });
+                });
+                return res.status(200).json({ success: true, message: "Fetched questions with options successfully", data: questionsWithOptions });
             }
-        })
-    },
-    fetchOptionsByQuestionId : (req,res) =>{
-        const question_id = req.params.question_id;
-        console.log("question_id : ",question_id);
-        const query = "select * from question_options where question_id = ?";
-        db.query(query,question_id,(err,result)=>{
-            if (err) {
-                console.error("Error during fetchOptionsByQuestionId : ",err);
-                return res.status(400).json({success : false, message : err.message});
-            }else{
-                console.log("fetchOptionsByQuestionId successfully : ",result);
-                return res.status(200).json({success : true, message : "Fetched qustion options successfully", data : result});
-            }
-        })
+        });
     }
 }
 
